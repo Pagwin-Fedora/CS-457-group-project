@@ -1,8 +1,8 @@
 import express from "express";
 import sqlite from "sqlite3";
-import client from "./chord_client.mjs";
-import server from "./chord_server.mjs";
-import chord_server from "./chord_server.mjs";
+import assert from "node:assert/strict";
+const todo = assert.bind(false);
+//import chord_server from "./chord_server.mjs";
 
 sqlite.verbose();
 const app = express();
@@ -37,6 +37,7 @@ app.get("/entry/:key", async (req, res) => {
 });
 app.post("/entry/:key/:value", async (req, res) => {
     const { key, value } = req.params;
+    todo();
     await new Promise((res, err) => kv_db.run('insert into kv (key,value) VALUES (?, ?)', key, value, (e) => {
         if (e) {
             err(e);
@@ -45,7 +46,7 @@ app.post("/entry/:key/:value", async (req, res) => {
     res.end(`${key}:${value}`)
 });
 
-chord_server.add_endpoints(app);
+//chord_server.add_endpoints(app);
 
 app.listen(port, () => {
     console.log(`Listening on ${port}`);
