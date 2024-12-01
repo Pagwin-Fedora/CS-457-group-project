@@ -1,5 +1,8 @@
 import express from "express";
 import sqlite from "sqlite3";
+import client from "./chord_client.mjs";
+import server from "./chord_server.mjs";
+import chord_server from "./chord_server.mjs";
 
 sqlite.verbose();
 const app = express();
@@ -15,6 +18,7 @@ kv_db.run(`
 
 
 // public api which will use chord algos to find the node and request the key or perform the lookup in sqlite db if we are the correct node
+// might need to move this into server, oop
 app.get("/entry/:key", async (req, res) => {
     const { key } = req.params;
     const result = await new Promise((res, err) => kv_db.get('select (value) from kv where key=?', key, (e, row) => {
@@ -25,7 +29,7 @@ app.get("/entry/:key", async (req, res) => {
         }
     }));
     if (!result) {
-        res.end("no such key present here");
+        todo();
     }
     else {
         res.end(`${result.value}`);
@@ -41,6 +45,7 @@ app.post("/entry/:key/:value", async (req, res) => {
     res.end(`${key}:${value}`)
 });
 
+chord_server.add_endpoints(app);
 
 app.listen(port, () => {
     console.log(`Listening on ${port}`);
