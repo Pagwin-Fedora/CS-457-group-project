@@ -26,12 +26,20 @@ const our_ip = (function() {
             }
         }
     }
-})()
+})();
 
-export function add_endpoints(app) {
+let insertion_function = null;
+let retrieval_function = null;
+export function add_endpoints(app, insert, retrieve) {
+    // using globals because doing the correct thing is too much effor for the time given
+    insertion_function = insert;
+    retrieval_function = retrieve;
+
     app.get(chord_generics.get_successor_path, get_successor);
     app.get(chord_generics.closest_preceding_finger_path, closest_preceding_finger_endpoint);
     app.get(chord_generics.find_predecessor_path, find_predecessor_endpoint);
+    app.get(chord_generics.lookup_key_path, lookup_key_endpoint);
+    app.post(chord_generics.insert_key_value_path, insert_key_value_endpoint);
     return app;
 }
 
@@ -65,13 +73,32 @@ async function closest_preceding_finger_endpoint(req, res) {
 
 async function closest_preceding_finger(id) {
     for (let i = finger_table.length - 1; i >= 0; i--) {
-        // wtf is their notation still
+        // first node such thatthe id is greater than or equal to n.finger[k].start
         if (chord_generics.id_in_range(todo(), chord_generics.string_to_id(our_ip), id)) {
             //string_to_id(finger_table[i])
 
         }
     }
     return our_ip;
+}
+
+// public api which will use chord algos to find the node and request the key or perform the lookup in sqlite db if we are the correct node
+async function insert_key_value_endpoint(req, res) {
+    const { key, value } = req.params;
+    todo();
+    insert_here(key, value);
+    res.end(`${key}:${value}`);
+}
+
+async function lookup_key_endpoint(req, res) {
+    const { key } = req.params;
+    const result = get_here(key);
+    if (!result) {
+        todo();
+    }
+    else {
+        res.end(`${result.value}`);
+    }
 }
 
 export default { add_endpoints }
