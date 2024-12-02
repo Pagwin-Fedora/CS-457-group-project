@@ -1,5 +1,9 @@
 import generics from "./chord_generics.mjs";
 
+/**
+    * @param {string} endpoint - the api endpoint like "/a/b/:abc"
+    * @param {ip} node - ip of the    * @returns {any} - json deserialized result
+*/
 async function api_req(endpoint, node) {
     const result = await fetch(new URL(endpoint, `http://${node}/`))
         .then(resp => resp.json());

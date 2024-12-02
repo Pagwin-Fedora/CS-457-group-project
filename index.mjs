@@ -2,7 +2,8 @@ import express from "express";
 import sqlite from "sqlite3";
 import assert from "node:assert/strict";
 const todo = assert.bind(false);
-//import chord_server from "./chord_server.mjs";
+import chord_server from "./chord_server.mjs";
+
 
 sqlite.verbose();
 const app = express();
@@ -46,8 +47,11 @@ app.post("/entry/:key/:value", async (req, res) => {
     res.end(`${key}:${value}`)
 });
 
-//chord_server.add_endpoints(app);
+chord_server.add_endpoints(app);
 
 app.listen(port, () => {
     console.log(`Listening on ${port}`);
 });
+
+// hacky solution to a dumb docker problem
+while (true) await new Promise(res => setTimeout(res, 1000));
