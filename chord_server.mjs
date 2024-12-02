@@ -73,7 +73,8 @@ async function closest_preceding_finger_endpoint(req, res) {
 
 async function closest_preceding_finger(id) {
     for (let i = finger_table.length - 1; i >= 0; i--) {
-        // first node such thatthe id is greater than or equal to n.finger[k].start
+        // first node such that the id is greater than or equal to n.finger[k].start
+        // what .start is isn't clear
         if (chord_generics.id_in_range(todo(), chord_generics.string_to_id(our_ip), id)) {
             //string_to_id(finger_table[i])
 
@@ -84,16 +85,24 @@ async function closest_preceding_finger(id) {
 
 // public api which will use chord algos to find the node and request the key or perform the lookup in sqlite db if we are the correct node
 async function insert_key_value_endpoint(req, res) {
-    const { key, value } = req.params;
+    const { key, value, internal } = req.params;
+    if (internal) {
+        insert_here(key, value);
+        res.end(`${key}:${value}`);
+        return;
+    }
+    // find_successor and do insertion with internal set
     todo();
-    insert_here(key, value);
-    res.end(`${key}:${value}`);
 }
 
 async function lookup_key_endpoint(req, res) {
-    const { key } = req.params;
+    const { key, internal } = req.params;
     const result = get_here(key);
     if (!result) {
+        if (internal) {
+            res.write(JSON.stringify(null));
+        }
+        // use find_successor and then do the RPC to the relevant node with internal set to true to avoid infinite loops
         todo();
     }
     else {
