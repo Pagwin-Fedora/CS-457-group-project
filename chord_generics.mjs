@@ -34,5 +34,7 @@ export const closest_preceding_finger_path = "/close_prec_finger/:id";
 export const find_predecessor_path = "/find_predecessor"
 export const lookup_key_path = "/entry/:key";
 export const insert_key_value_path = "/entry/:key/:value"
+export const join_path = "/join";
+export const ack_join_path = "/ack_join/";
 
-export default { string_to_id, id_in_range, get_successor_path, closest_preceding_finger_path, find_predecessor_path, lookup_key_path, insert_key_value_path };
+export default { string_to_id, id_in_range, get_successor_path, closest_preceding_finger_path, find_predecessor_path, lookup_key_path, insert_key_value_path, join_path, ack_join_path };

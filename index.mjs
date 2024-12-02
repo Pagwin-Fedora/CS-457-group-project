@@ -14,13 +14,11 @@ async function main() {
         value text
     ) strict
 `);
-
-
-
-
-
+    app.use(express.json());
     chord_server.add_endpoints(app);
-
+    app.post("/", (req, res) => {
+        res.json({ body: JSON.stringify(req.body) });
+    })
     app.listen(port, () => {
         console.log(`Listening on ${port}`);
     });
