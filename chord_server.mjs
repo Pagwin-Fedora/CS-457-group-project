@@ -83,31 +83,36 @@ async function insert_key_value_endpoint(req, res) {
     const { key, value, internal } = req.params;
     if (internal == "internal") {
         insertion_function(key, value);
-        res.json({[key]:value});
+        res.json({ [key]: value });
         return;
     }
     // need to figure out bit count
     const succ = await find_successor(chord_generics.string_to_id(key));
-    if(succ == null){
-        chord_client.insert_kv(our_ip, key, value, true);
+    if (succ == null) {
+        res.json(await chord_client.insert_kv(our_ip, key, value, true));
         return;
     }
-    chord_client.insert_kv(succ, key, value, true);
+    res.json(await chord_client.insert_kv(succ, key, value, true));
 }
 
 async function lookup_key_endpoint(req, res) {
     const { key, internal } = req.params;
-    const result = get_here(key);
+    const result = await retrieval_function(key);
     if (!result) {
         if (internal == "internal") {
             res.json(null);
             return;
         }
-        // use find_successor and then do the RPC to the relevant node with internal set to true to avoid infinite loops
-        todo();
+        const succ = await find_successor(chord_generics.string_to_id(key));
+        if (succ == null) {
+            res.json(await chord_client.lookup_key(our_ip, key, true));
+            return;
+        }
+        res.json(await chord_client.lookup_key(succ, key, true));
     }
     else {
-        res.end(`${result.value}`);
+        console.log("e");
+        res.json(result);
     }
 }
 

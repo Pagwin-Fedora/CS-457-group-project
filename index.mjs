@@ -15,9 +15,8 @@ async function main() {
         value text
     ) strict
 `);
-    app.use(express.json());
+    //app.use(express.json());
     app.use((req, res, next) => {
-        console.log("testing");
         console.log(req.originalUrl);
         next();
     })
@@ -51,7 +50,12 @@ async function get_here(key) {
         if (e) {
             err(e);
         } else {
-            res(row);
+            if (row) {
+                res({ [key]: row.value });
+            }
+            else {
+                res(null);
+            }
         }
     }));
 
