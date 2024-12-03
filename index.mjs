@@ -16,6 +16,11 @@ async function main() {
     ) strict
 `);
     app.use(express.json());
+    app.use((req, res, next) => {
+        console.log("testing");
+        console.log(req.originalUrl);
+        next();
+    })
     chord_server.add_endpoints(app, insert_here, get_here);
     app.post("/", (req, res) => {
         res.json({ body: JSON.stringify(req.body) });
