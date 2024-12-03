@@ -31,7 +31,7 @@ export function id_in_range(id, lower_bound, upper_bound) {
 
 export const get_successor_path = "/successor";
 export const closest_preceding_finger_path = "/close_prec_finger/:id";
-export const find_predecessor_path = "/find_predecessor"
+export const find_predecessor_path = "/find_predecessor/:id"
 export const lookup_key_path = "/entry/:key";
 export const insert_key_value_path = "/entry/:key/:value"
 export const join_path = "/join";

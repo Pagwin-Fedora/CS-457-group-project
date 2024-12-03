@@ -1,3 +1,4 @@
+import chord_generics from "./chord_generics.mjs";
 import generics from "./chord_generics.mjs";
 import assert from "node:assert/strict";
 const todo = assert.bind(null, false);
@@ -28,8 +29,12 @@ async function join(to, ack_to) {
 
 export const get_successor = api_req.bind(null, generics.get_successor_path);
 
-export function closest_preceding_finger(node, id) {
-    return api_req(generics.closest_preceding_finger_path.replace(":id", id), node);
+export async function find_predecessor(to, id) {
+    return await api_req(chord_generics.find_predecessor_path.replace(":id", id), to)
+}
+
+export async function closest_preceding_finger(node, id) {
+    return await api_req(generics.closest_preceding_finger_path.replace(":id", id), node);
 }
 
 export default { get_successor, closest_preceding_finger, ack_join, join };

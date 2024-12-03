@@ -36,8 +36,7 @@ export function add_endpoints(app, insert, retrieve) {
     app.get(chord_generics.find_predecessor_path, find_predecessor_endpoint);
     app.get(chord_generics.lookup_key_path, lookup_key_endpoint);
     app.post(chord_generics.insert_key_value_path, insert_key_value_endpoint);
-    app.post(chord_generics.join_path, join_endpoint);
-    app.post(chord_generics.ack_join_path, ack_join_endpoint);
+
     return app;
 }
 
@@ -46,7 +45,7 @@ async function get_successor(_req, res) {
 }
 
 async function find_predecessor_endpoint(req, res) {
-    const id = req.params;
+    const { id } = req.params;
     res.end(await find_predecessor(id));
 }
 
@@ -95,32 +94,21 @@ async function lookup_key_endpoint(req, res) {
     * addr is joining
     * @param{ip} addr
 */
-async function join(addr) {
-    const pred = await find_predecessor(string_to_id(addr));
-    if (pred === our_ip) {
-        await chord_client.ack_join(addr, predecessor_node, our_ip);
-        predecessor_node = addr;
-    }
-    else {
-        await chord_client.join(pred, addr);
-    }
+
+async function join(our_ip, known_member) {
+    predecessor_node = null;
+    successor_node = await chord_client.find_predecessor(known_member, chord_generics.string_to_id(our_ip));
+
 }
 
-async function join_endpoint(req, res) {
-    const { ack_to } = req.body;
-    await join(ack_to);
-    res.end("");
+// TODO: should be occasionally called probably with setInterval in index.mjs
+async function stabilize() {
+    todo();
 }
 
-async function ack_join_endpoint(req, res) {
-    const { pred, succ } = req.body;
-    ack_join(pred, succ);
-    res.end("");
-}
-
-async function ack_join(pred, succ) {
-    predecessor_node = pred;
-    successor_node = succ;
+// TODO: needs an api endpoint and client func def
+async function notify(potential_pred) {
+    todo();
 }
 
 export default { add_endpoints }
