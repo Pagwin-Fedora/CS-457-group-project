@@ -8,7 +8,9 @@ const sha1 = crypto.hash.bind(null, "sha1");
     * @param {integer} bits - number of bits the return type will have
     * @returns {integer}
 */
-export function string_to_id(str, bits) {
+export function string_to_id(str) {
+    // technically overkill but whatever
+    const bits = 64;
     // bad things happen if we end up with more than 2^64 nodes
     const ret = Buffer.from(sha1(str), 'hex').readBigUint64BE();
     return ret % Math.pow(2, bits);
@@ -30,11 +32,12 @@ export function id_in_range(id, lower_bound, upper_bound) {
 }
 
 export const get_successor_path = "/successor";
+export const get_predecessor_path = "/predecessor";
 export const closest_preceding_finger_path = "/close_prec_finger/:id";
 export const find_predecessor_path = "/find_predecessor/:id"
-export const lookup_key_path = "/entry/:key";
-export const insert_key_value_path = "/entry/:key/:value"
+export const find_successor_path = "/find_successor/:id"
+export const lookup_key_path = "/entry/:key/:internal";
+export const insert_key_value_path = "/entry/:key/:value/:internal"
 export const join_path = "/join";
-export const ack_join_path = "/ack_join/";
 
-export default { string_to_id, id_in_range, get_successor_path, closest_preceding_finger_path, find_predecessor_path, lookup_key_path, insert_key_value_path, join_path, ack_join_path };
+export default { string_to_id, id_in_range, get_successor_path, closest_preceding_finger_path, find_predecessor_path, lookup_key_path, insert_key_value_path, join_path, ack_join_path, get_predecessor_path, find_successor_path };

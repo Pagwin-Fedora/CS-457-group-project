@@ -15,16 +15,15 @@ async function main() {
     ) strict
 `);
     app.use(express.json());
-    chord_server.add_endpoints(app);
+    chord_server.add_endpoints(app, insert_here, get_here);
     app.post("/", (req, res) => {
         res.json({ body: JSON.stringify(req.body) });
-    })
+    });
+
     app.listen(port, () => {
         console.log(`Listening on ${port}`);
     });
 
-    // hacky solution to a dumb docker problem
-    while (true) await new Promise(res => setTimeout(res, 1000));
 }
 /**
     * @param{string} key
