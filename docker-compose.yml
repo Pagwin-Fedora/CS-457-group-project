@@ -1,0 +1,23 @@
+services:
+  node1:
+    build: .
+    ports:
+      - "8000:80"
+    networks:
+      - front
+    environment:
+      - NODE_IP=node1
+
+  node2: 
+    build: .
+    ports:
+      - "8001:80"
+    networks:
+      - front
+    environment:
+      - NODE_IP=node2
+
+
+networks:
+  front:
+    driver: bridge

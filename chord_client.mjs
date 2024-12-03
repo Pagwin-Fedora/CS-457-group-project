@@ -52,4 +52,7 @@ export async function lookup_key(node, key, internal = false) {
     const opts = {};
     return await fetch(new URL(endpoint, `http://${node}/`), opts).then(res => res.json());
 }
-export default { get_successor, closest_preceding_finger, join, insert_kv, lookup_key };
+export async function find_successor(to, id){
+    return await api_req(chord_generics.find_successor_path.replace(":id", id), to) 
+}
+export default { get_successor,find_successor, closest_preceding_finger, join, insert_kv, lookup_key };

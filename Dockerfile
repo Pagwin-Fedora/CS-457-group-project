@@ -1,11 +1,14 @@
 FROM node:23-alpine3.19
 
+RUN apk add --no-cache curl
+
 COPY . /app
 
 WORKDIR /app
 
 RUN npm install
 
-EXPOSE 8080/tcp
+EXPOSE 80/tcp
 
-CMD ["/app/index.mjs"]
+CMD ["node", "/app/index.mjs"]
+

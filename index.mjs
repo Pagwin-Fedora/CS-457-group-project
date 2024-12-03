@@ -15,7 +15,7 @@ async function main() {
         value text
     ) strict
 `);
-    //app.use(express.json());
+    app.use(express.json());
     app.use((req, res, next) => {
         console.log(req.originalUrl);
         next();
@@ -35,7 +35,7 @@ async function main() {
     * @param{string} val
 */
 async function insert_here(key, val) {
-    return await new Promise((res, err) => kv_db.run('insert into kv (key,value) VALUES (?, ?)', key, val, (e) => {
+    return await new Promise((res, err) => kv_db.run('replace into kv (key,value) VALUES (?, ?)', key, val, (e) => {
         if (e) {
             err(e);
         } else res(null);

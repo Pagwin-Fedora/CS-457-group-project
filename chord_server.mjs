@@ -9,8 +9,8 @@ import {
 } from 'os';
 const todo = assert.bind(false);
 
-const successor_node = null;
-const predecessor_node = null;
+let successor_node = null;
+let predecessor_node = null;
 
 /** @type {ip}*/
 const our_ip = (function() {
@@ -37,7 +37,7 @@ export function add_endpoints(app, insert, retrieve) {
     app.get(chord_generics.find_successor_path, find_successor_endpoint);
     app.get(chord_generics.lookup_key_path, lookup_key_endpoint);
     app.post(chord_generics.insert_key_value_path, insert_key_value_endpoint);
-
+    app.post(chord_generics.join_path, join_endpoint)
     return app;
 }
 
@@ -117,9 +117,12 @@ async function lookup_key_endpoint(req, res) {
 }
 
 async function join_endpoint(req, res) {
-    const { known_member } = req.body();
+    const { known_member } = req.body; // Ensure req.body is parsed (use body-parser or express.json middleware)
+    console.log(req.body);
+    console.log(`Node joined with member: ${known_member}`);
     res.end(await join(known_member));
 }
+
 
 /**
     * addr is joining
