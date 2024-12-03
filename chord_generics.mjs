@@ -13,7 +13,7 @@ export function string_to_id(str) {
     const bits = 64;
     // bad things happen if we end up with more than 2^64 nodes
     const ret = Buffer.from(sha1(str), 'hex').readBigUint64BE();
-    return ret % Math.pow(2, bits);
+    return Number(ret) % Math.pow(2, bits);
 }
 
 /** 
@@ -40,4 +40,4 @@ export const lookup_key_path = "/entry/:key/:internal";
 export const insert_key_value_path = "/entry/:key/:value/:internal"
 export const join_path = "/join";
 
-export default { string_to_id, id_in_range, get_successor_path, closest_preceding_finger_path, find_predecessor_path, lookup_key_path, insert_key_value_path, join_path, ack_join_path, get_predecessor_path, find_successor_path };
+export default { string_to_id, id_in_range, get_successor_path, closest_preceding_finger_path, find_predecessor_path, lookup_key_path, insert_key_value_path, join_path, get_predecessor_path, find_successor_path };

@@ -54,7 +54,7 @@ async function find_predecessor_endpoint(req, res) {
     * @returns{ip}
 */
 async function find_successor(id) {
-    pred = await find_predecessor(id)
+    let pred = await find_predecessor(id)
     return await client.get_successor(pred);
 }
 
@@ -68,7 +68,11 @@ async function find_successor_endpoint(req, res) {
 */
 async function find_predecessor(id) {
     let n_prime = our_ip;
-    while (!chord_generics.id_in_range(id, n_prime, chord_generics.string_to_id(chord_client.get_successor(n_prime)))) {
+    if (chord_client.get_successor(n_prime)) {
+        return n_prime;
+    }
+
+    while (!chord_generics.id_in_range(id, n_prime, chord_generics.string_to_id())) {
         n_prime = await client.get_successor(n_prime);
     }
     return n_prime;
@@ -78,12 +82,16 @@ async function find_predecessor(id) {
 async function insert_key_value_endpoint(req, res) {
     const { key, value, internal } = req.params;
     if (internal == "internal") {
-        insert_here(key, value);
-        res.end(`${key}:${value}`);
+        insertion_function(key, value);
+        res.json({[key]:value});
         return;
     }
     // need to figure out bit count
     const succ = await find_successor(chord_generics.string_to_id(key));
+    if(succ == null){
+        chord_client.insert_kv(our_ip, key, value, true);
+        return;
+    }
     chord_client.insert_kv(succ, key, value, true);
 }
 
@@ -123,7 +131,7 @@ async function join(known_member) {
 export async function stabilize() {
     //
     todo();
-    const x = chord_client.get_predecessor(successor_node;
+    const x = chord_client.get_predecessor(successor_node);
 }
 
 // TODO: needs an api endpoint and client func def

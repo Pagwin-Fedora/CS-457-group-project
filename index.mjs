@@ -2,11 +2,12 @@ import express from "express";
 import sqlite from "sqlite3";
 import chord_server from "./chord_server.mjs";
 
+const kv_db = new sqlite.Database(":memory:");
+
 async function main() {
     sqlite.verbose();
     const app = express();
-    const port = 8080;
-    const kv_db = new sqlite.Database(":memory:");
+    const port = 80;
 
     kv_db.run(`
     create table kv(
@@ -30,7 +31,7 @@ async function main() {
     * @param{string} val
 */
 async function insert_here(key, val) {
-    return await new Promise((res, err) => kv_db.run('insert into kv (key,value) VALUES (?, ?)', key, value, (e) => {
+    return await new Promise((res, err) => kv_db.run('insert into kv (key,value) VALUES (?, ?)', key, val, (e) => {
         if (e) {
             err(e);
         } else res(null);
